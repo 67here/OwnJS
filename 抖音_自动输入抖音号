@@ -1,0 +1,57 @@
+'ui';
+"auto";
+var i = 0;
+ui.layout(
+    <scroll>
+    <vertical padding="16">
+        <text textSize="16sp" textColor="red" text="提示：按下音量- 自动检测输入"/>
+        <button id='system_setting' text="开启无障碍" textSize="20sp"/>
+        <text textSize="16sp" textColor="red" text="1.批量抖音号"/>
+        <input id="tiktok" hint="换行---分割线"/>
+        <button id='start' text="保存并运行" textSize="20sp"/>
+
+    </vertical>
+    </scroll>
+)
+
+ui.system_setting.click(function(){
+    auto();
+    if (floaty && floaty.hasOwnProperty("checkPermission") && !floaty.checkPermission()) {
+        floaty.requestPermission(); toast("请先开启悬浮窗权限再运行,否则无法显示提示"); exit()
+    }
+})
+
+ui.start.click(function(){
+    let ids = ui.tiktok.text();
+    var id_array = ids.split('\n');
+
+    storage.put('save_id', ids);
+    toast('配置已保存\n输入抖音号'+id_array.length+'个');
+
+    threads.start(function(){
+        events.observeKey();
+        events.onKeyDown("volume_down", function(event){
+            let edit_btn = className('android.widget.EditText').editable(true).findOne(3000);
+            if(edit_btn){
+                edit_btn.setText(id_array[i++]);
+                toast("音量-按下\n已输入");
+                let id_rray = storage.get("save_id");
+                let id_ray = id_rray.split('\n');
+                id_ray = id_ray.splice(1);
+                toast('存储更新,当前剩余抖音号:'+id_ray.length);
+                id_rray = id_ray.join('\n');
+                storage.put('save_id', id_rray);
+            }
+            else toast('没有输入框，请重试');
+    });
+    })
+})
+
+//读取配置
+var storage = storages.create("67copy");
+if(storage.get("save_id")) ui.tiktok.setText(storage.get("save_id"));
+
+//点击不可点击的控件
+function position_click(x){
+    if(x) click(x.bounds().centerX(), x.bounds().centerY())
+        else toastLog('找不到此控件');}
