@@ -11,13 +11,13 @@ threads.start(function(){
 
 console.show();
 home();sleep(2000);
-log('跳转新界面中...');
 
+log('跳转新界面中...');
 app.startActivity({
 packageName: "com.taobao.taobao",
 data: 'taobao://pages.tmall.com/wow/z/tmtjb/town/tasklist-v2'
 });
-text('做任务赚金币').waitFor();log('页面加载完成');
+textMatches('每日来访.+').waitFor();log('页面加载完成');
 while(1){
 	sleep(3000);
 	let btn = textMatches('去完成|找答案').find();
@@ -50,7 +50,7 @@ packageName: "com.taobao.taobao",
 data: 'taobao://pages.tmall.com/wow/z/tmtjb/town/task'
 });
 
-text('做任务赚金币').waitFor();log('页面加载完成');
+text('一键领取').waitFor();log('页面加载完成');
 while(1){
 	sleep(3000);
 	let btn = textMatches('去完成|去看看').find();
@@ -78,7 +78,7 @@ while(1){
     sleep(3000);
     into_flag = 'null';
   }
-  else {log('任务全部完成');hamibot.exit();};
+  else {log('任务全部完成\n还有一个双12签到，但是淘宝制裁，需要关无障碍手动做');hamibot.exit();};
 }
 
 //判断等待
