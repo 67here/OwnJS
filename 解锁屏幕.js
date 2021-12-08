@@ -94,7 +94,7 @@ ui.start.click(function(){
   });
 });
 
-//
+//读取配置
 var storage = storages.create("67pwd");
 if(storage.get("swipe_counts")) ui.swipe_counts.setText(storage.get("swipe_counts"));
 if(storage.get("swipe_time")) ui.swipe_time.setText(storage.get("swipe_time"));
@@ -104,7 +104,7 @@ if(typeof(storage.get("ckStep3")) == 'boolean') ui.ck_step3.checked = storage.ge
 if(storage.get("brightnes")) ui.brightnes.setText(storage.get("brightnes"));
 if(storage.get("soundvolum")) ui.soundvolum.setText(storage.get("soundvolum"));
 
-//
+//息屏验证
 threads.start(function(){
     if(!device.isScreenOn()) {
       unlock_screen(convert_string(storage.get("save_origin")), 
@@ -123,12 +123,14 @@ threads.start(function(){
 });
 
 //功能函数
+//依次显示
 function add_display(content) {
     content_add = content_add + '\n' + content;
     ui.output.setText(content_add);    
 }
-
+//字符串转换为二维数组
 function convert_string(string_array){
+  if(!string_array) return false;
   var two_dimensional = string_array.split('\n');
   var new_array = new Array();
   var two_text;
@@ -141,6 +143,7 @@ function convert_string(string_array){
   new_array[0] = 1000;
   return new_array;
 }
+//环节1、2 解锁屏幕
 function unlock_screen(pwd_array, counts, time, click_Or_swipe){
   device.wakeUp();sleep(1000);
   while(counts--){swipe(device.width/2, device.height*0.8, device.width/2, device.height*0.2, time);sleep(1000);}
@@ -150,9 +153,10 @@ function unlock_screen(pwd_array, counts, time, click_Or_swipe){
     else{for(i = 1; i < pwd_array.length; i++){click(Number(pwd_array[i][0]),Number(pwd_array[i][1]));sleep(1000);}}           
   }
 }
-
+//环节3 亮度和音量
 function light_sound(ck_step3, light, sound){
-  if(!ck_step3) hamibot.exit();
+  if(!ck_step3) return false;
   sleep(1000);device.setBrightness(light);sleep(2000);
 	sleep(1000);device.setMusicVolume(device.getMusicMaxVolume()*sound/100);
 }
+
