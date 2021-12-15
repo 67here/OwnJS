@@ -34,7 +34,7 @@ function check(Uiobject){
 function mainwork(){
   sureclick(text('动态').clickable(true).findOne(8000));
   let up_name = id('tv.danmaku.bili:id/card_user_name').findOne(3000);
-  if(up_name) log('up主:'+up_name.getText()+'\n按下音量+手动中止，不支持夜晚模式')
+  if(up_name) log('up主:'+up_name.getText()+'\n按下音量+手动中止')
   else toastLog('未发现up主名字');
   while(1) {
     swipe(dev_width/2, dev_hight * 3/4, dev_width/2, dev_hight/4, 1000);sleep(1100);
@@ -51,3 +51,4 @@ console.show();
 home();sleep(2000);
 jumpinto(bili_uid);
 mainwork();
+hamibot.exit();
